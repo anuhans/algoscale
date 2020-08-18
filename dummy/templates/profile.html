@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <label for="cars">select User to delete:</label>
+
+    <select name="cars" id="users">
+        {% for i in user %}
+      <option value="{{i}}">{{i.id}}</option>
+      {% endfor %}
+    </select>
+    <button id="delete_button" type="delete">Delete</button>
+    <button type="delete" id="logout">Logout</button>
+
+</body>
+
+</html>
+<script>
+    $(document).ready(function() {
+
+        $('#logout').click(function() {
+            window.location.href = "/auth/logout"
+        })
+
+        $('#delete_button').on('click', function() {
+            id = $("#users option:selected").text();
+            console.log(id)
+            $.ajax({
+                url: "{% url 'base:deleteuser' %}",
+                type: "POST",
+
+                data: {
+                    'id': id,
+                    'csrfmiddlewaretoken': '{{csrf_token}}'
+                }, //Data that we prepared previously,
+                success: function(data) {
+                    window.location.href = "/auth/profile"
+
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            });
+
+
+        })
+
+    })
+</script>
